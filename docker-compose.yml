@@ -1,0 +1,89 @@
+services:
+  redis:
+    image: redis:7-alpine
+    # H2: no published port — Redis is only reachable inside the compose network.
+    env_file:
+      - backend/.env
+    command: redis-server --bind 127.0.0.1 --appendonly yes --requirepass $$REDIS_PASSWORD
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    ports:
+      - "8081:8000"
+    user: "0:0"
+    env_file:
+      - ./backend/.env
+    command:
+      - sh
+      - -c
+      - |
+        mkdir -p /data/outputs
+        chown -R app:app /data/outputs 2>/dev/null || true
+        chmod -R 777 /data/outputs 2>/dev/null || true
+        export REDIS_URL="redis://:$${REDIS_PASSWORD}@redis:6379/0"  # H2: password from backend/.env (env_file)
+        exec uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - CORS_ALLOW_ORIGINS=http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:9000
+      - VGO_OUTPUT_DIR=/data/outputs
+    volumes:
+      - vgo_outputs:/data/outputs
+      # Bind-mount the on-disk outputs directory written by the host-side
+      # venv worker (see scripts/start_worker.bat). The Docker backend
+      # serves files from /data/outputs *and* falls back to /host_outputs
+      # if a filename isn't in the named volume yet (most assets during
+      # dev land in the host dir). Set VGO_HOST_OUTPUTS to the absolute
+      # host path for your machine (e.g. Windows: E:\VGO创意视频生成系统\data\outputs).
+      - ${VGO_HOST_OUTPUTS:-./data/outputs}:/host_outputs:rw
+      # Bind-mount the source so edits take effect on the next restart —
+      # no image rebuild required. Falls back to baked-in code if the
+      # host path is missing (e.g. production deploy where only the
+      # image is shipped).
+      - ./backend:/srv/backend:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      # python:3.11-slim has no wget, so use python's stdlib.
+      test: ["CMD", "python", "-c", "import os,urllib.request,sys; k=os.environ.get('API_KEYS','').split(':')[0]; req=urllib.request.Request('http://localhost:8000/api/health', headers={'X-Api-Key': k}); sys.exit(0 if urllib.request.urlopen(req, timeout=2).status==200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - backend/.env
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  vgo_outputs:

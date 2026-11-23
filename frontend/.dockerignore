@@ -1,0 +1,37 @@
+# --- Frontend ---
+node_modules
+.next
+.git
+.gitignore
+.env*.local
+*.log
+
+# --- Backend ---
+__pycache__
+*.py[cod]
+.venv
+venv
+.env
+.env.*
+!.env.example
+*.log
+.pytest_cache
+htmlcov
+
+# --- Project ---
+.git
+.gitignore
+.claude
+.idea
+.vscode
+storage
+uploads
+outputs
+README.md
+DEPLOYMENT.md
+OPTIMIZATION_REPORT.md
+*.log
+launcher.py
+start.bat
+docker-compose.yml
+package-lock.json

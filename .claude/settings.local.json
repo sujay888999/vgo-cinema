@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -NoProfile -Command \"Remove-Item -LiteralPath 'E:\\\\VGO创意视频生成系统\\\\frontend\\\\app\\\\layout.js' -Force\")"
+    ]
+  }
+}
