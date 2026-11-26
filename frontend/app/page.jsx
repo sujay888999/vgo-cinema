@@ -278,10 +278,10 @@ function EngineStack({ costBreakdown, totalUsd }) {
   // Always-on. Tells the user which real NVIDIA models are wired in
   // for this run.
   const items = [
-    { name: 'Director (Script)',     model: 'meta/llama-3.3-70b-instruct', icon: Clapperboard, color: 'indigo' },
-    { name: 'Prompt Engineer',       model: 'meta/llama-3.1-8b-instruct',  icon: Camera,       color: 'amber' },
+    { name: 'Director (Script)',     model: 'nvidia/nemotron-3.5-lightning-30b-a3b', icon: Clapperboard, color: 'indigo' },
+    { name: 'Prompt Engineer',       model: 'nvidia/nemotron-3.5-lightning-30b-a3b',  icon: Camera,       color: 'amber' },
     { name: 'Image Gen',             model: 'black-forest-labs/flux.1-dev (NIM)',  icon: ImageIcon, color: 'violet' },
-    { name: 'Composer (Narrative)',  model: 'meta/llama-3.3-70b-instruct', icon: FileText,     color: 'emerald' },
+    { name: 'Composer (Narrative)',  model: 'nvidia/nemotron-3.5-lightning-30b-a3b', icon: FileText,     color: 'emerald' },
     { name: 'Voice-Over',            model: 'nvidia/magpie-tts-multilingual (NVCF)',  icon: Mic,        color: 'rose' },
     { name: 'Music',                 model: 'procedural ambient pad (numpy + ffmpeg)',  icon: Music4,    color: 'cyan' },
   ];

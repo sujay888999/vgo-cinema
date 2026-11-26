@@ -263,9 +263,9 @@ def render_credits_card(title: str, prompt: str, out: Path,
 
     if not roles:
         roles = [
-            ("Director",         "AI Director · meta/llama-3.3-70b-instruct"),
-            ("Cinematographer",  "Image Prompt Engineer · meta/llama-3.1-8b-instruct"),
-            ("Composer",         "Narrative Editor · meta/llama-3.3-70b-instruct"),
+            ("Director",         "AI Director · nvidia/nemotron-3.5-lightning-30b-a3b"),
+            ("Cinematographer",  "Image Prompt Engineer · nvidia/nemotron-3.5-lightning-30b-a3b"),
+            ("Composer",         "Narrative Editor · nvidia/nemotron-3.5-lightning-30b-a3b"),
             ("Storyboard",       "4 cinematic keyframes · ffmpeg xfade"),
             ("Original Score",   "Procedural ambient pad · synthesized in-pipeline"),
         ]

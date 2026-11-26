@@ -240,7 +240,7 @@ def start_generation_workflow_agnes(task_id: str, prompt: str,
                 system=DIRECTOR_SYSTEM,
                 user=f"User request: {prompt}\n\nProduce a JSON object with up to {max_scenes} scenes.",
                 temperature=0.7,
-                max_tokens=1800,
+                max_tokens=8000,
             )
             cache_hit = False
             cache_put(prompt, style, max_scenes, director_obj)
@@ -348,7 +348,7 @@ def start_generation_workflow_agnes(task_id: str, prompt: str,
                     {"role": "user", "content": composer_input},
                 ],
                 temperature=0.6,
-                max_tokens=600,
+                max_tokens=2000,
             )
             cost_breakdown["composer_llm"] = COST_AGNES_CHAT_USD
         except AgnesAPIError:

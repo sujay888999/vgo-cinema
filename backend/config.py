@@ -76,19 +76,18 @@ class Settings(BaseSettings):
     nvidia_base_url: str = Field(
         default="https://integrate.api.nvidia.com/v1", alias="NVIDIA_BASE_URL"
     )
-    # All three are non-reasoning models — reasoning variants
+# All three use a reasoning model (nemotron-3.5-lightning-30b-a3b) - keep max_tokens generous so reasoning does not eat the visible output budget.
     # (nemotron-*, etc.) return their answer in `reasoning_content`
     # rather than `content`, which is not what we need.
     nvidia_director_model: str = Field(
-        default="meta/llama-3.3-70b-instruct", alias="NVIDIA_DIRECTOR_MODEL"
+        default="nvidia/nemotron-3.5-lightning-30b-a3b", alias="NVIDIA_DIRECTOR_MODEL"
     )
     nvidia_composer_model: str = Field(
-        # llama-3.3-70b is fast and reliable on the free NIM tier; the
-        # 397B qwen MoE often hits 60s timeouts under load.
-        default="meta/llama-3.3-70b-instruct", alias="NVIDIA_COMPOSER_MODEL"
+    # nemotron-3.5-lightning-30b-a3b is a reasoning model; keep max_tokens generous.
+        default="nvidia/nemotron-3.5-lightning-30b-a3b", alias="NVIDIA_COMPOSER_MODEL"
     )
     nvidia_prompt_model: str = Field(
-        default="meta/llama-3.1-8b-instruct", alias="NVIDIA_PROMPT_MODEL"
+        default="nvidia/nemotron-3.5-lightning-30b-a3b", alias="NVIDIA_PROMPT_MODEL"
     )
     nvidia_request_timeout: int = Field(default=60, alias="NVIDIA_REQUEST_TIMEOUT")
 
